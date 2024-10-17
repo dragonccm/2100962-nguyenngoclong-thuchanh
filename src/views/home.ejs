@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <%- include(headerFile) %>
+    <p>Đây là trang chủ</p>
+    <div class="container mt-5">
+        <h2>Danh sách thông tin</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Quyền</th>
+                    <th>Năm Sinh</th>
+                    <th>Quê Quán</th>
+                    <th>Giới Tính</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% Users.forEach(function(item) { %>
+                    <tr>
+                        <td><%= item.id %></td>
+                        <td><%= item.ten %></td>
+                        <td><%= item.quyen %></td>
+                        <td><%= item.namsinh %></td>
+                        <td><%= item.quequan %></td>
+                        <td><%= item.gioitinh %></td>
+                        <td>
+                            <button class="btn btn-warning btn-update">Sửa</button>
+                            <button class="btn btn-danger btn-delete">Xóa</button>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+        <button class="btn btn-primary" id="add-user-btn">Thêm</button>
+    </div>
+
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Thêm Người Dùng Mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm">
+                        <div class="form-group">
+                            <label for="addTen">Tên:</label>
+                            <input type="text" class="form-control" id="addTen" name="ten" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addQuyen">Quyền:</label>
+                            <input type="text" class="form-control" id="addQuyen" name="quyen" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addNamsinh">Năm Sinh:</label>
+                            <input type="text" class="form-control" id="addNamsinh" name="namsinh" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addQuequan">Quê Quán:</label>
+                            <input type="text" class="form-control" id="addQuequan" name="quequan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addGioitinh">Giới Tính:</label>
+                            <input type="text" class="form-control" id="addGioitinh" name="gioitinh" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateUserModalLabel">Cập Nhật Thông Tin Người Dùng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateUserForm">
+                        <input type="hidden" id="updateId" name="id">
+                        <div class="form-group">
+                            <label for="updateTen">Tên:</label>
+                            <input type="text" class="form-control" id="updateTen" name="ten" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateQuyen">Quyền:</label>
+                            <input type="text" class="form-control" id="updateQuyen" name="quyen" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateNamsinh">Năm Sinh:</label>
+                            <input type="text" class="form-control" id="updateNamsinh" name="namsinh" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateQuequan">Quê Quán:</label>
+                            <input type="text" class="form-control" id="updateQuequan" name="quequan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateGioitinh">Giới Tính:</label>
+                            <input type="text" class="form-control" id="updateGioitinh" name="gioitinh" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Cập Nhật</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include(footerFile) %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+<script>
+    $(document).ready(function () {
+        $('#add-user-btn').click(function() {
+            $('#addUserModal').modal('show');
+        });
+
+        $('#addUserForm').submit(function (event) {
+            event.preventDefault(); 
+            const data = {
+                type: 'insert',
+                ten: $('#addTen').val().trim(),
+                quyen: $('#addQuyen').val().trim(),
+                namsinh: $('#addNamsinh').val().trim(),
+                quequan: $('#addQuequan').val().trim(),
+                gioitinh: $('#addGioitinh').val().trim()
+            };
+            fetch('/api/restuser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                $('#addUserModal').modal('hide');
+                // Cập nhật lại danh sách người dùng
+                // ...
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        $('#updateUserForm').submit(function (event) {
+            event.preventDefault();
+            const data = {
+                type: 'update',
+                id: $('#updateId').val().trim(),
+                ten: $('#updateTen').val().trim(),
+                quyen: $('#updateQuyen').val().trim(),
+                namsinh: $('#updateNamsinh').val().trim(),
+                quequan: $('#updateQuequan').val().trim(),
+                gioitinh: $('#updateGioitinh').val().trim()
+            };
+            fetch('/api/restuser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                $('#updateUserModal').modal('hide');
+                // Cập nhật lại danh sách người dùng
+                // ...
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        $('.btn-update').click(function() {
+            const row = $(this).closest('tr');
+            $('#updateId').val(row.find('td:nth-child(1)').text().trim());
+            $('#updateTen').val(row.find('td:nth-child(2)').text().trim());
+            $('#updateQuyen').val(row.find('td:nth-child(3)').text().trim());
+            $('#updateNamsinh').val(row.find('td:nth-child(4)').text().trim());
+            $('#updateQuequan').val(row.find('td:nth-child(5)').text().trim());
+            $('#updateGioitinh').val(row.find('td:nth-child(6)').text().trim());
+            $('#updateUserModal').modal('show');
+        });
+
+        $('.btn-delete').click(function() {
+            const row = $(this).closest('tr');
+            const data = {
+                type: 'delete',
+                id: row.find('td:nth-child(1)').text().trim()
+            };
+            fetch('/api/restuser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                row.remove();
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }); 
+</script>
