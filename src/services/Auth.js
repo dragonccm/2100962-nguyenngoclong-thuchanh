@@ -2,8 +2,7 @@ import pool from '../connectDB.js';
 import {createToken} from '../middleware/auth.js';
 
 export const Register = async (data) => {
-    const [rows] = await pool.query(`INSERT INTO user( ten, pass, quyen, namsinh, quequan, gioitinh) VALUES (?,?,?,?,?,?)`, [data.ten, data.pass, data.quyen, data.namsinh, data.quequan, data.gioitinh]);
-console.log('rows: ', rows);
+    const [rows] = await pool.query(`INSERT INTO user( ten, pass, namsinh, quequan, gioitinh) VALUES (?,?,?,?,?,?)`, [data.ten, data.pass, data.namsinh, data.quequan, data.gioitinh]);
     return rows;
 }
 export const Login = async (data) => {
