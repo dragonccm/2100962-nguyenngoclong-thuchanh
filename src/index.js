@@ -7,8 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 6969
 import  initWebRouter from "./routes/web.js";
 import initApiRouter from "./routes/api.js";
-
-
+import { redisStore } from './redisClient.js';
+import session from 'express-session';
 const corsOptions = {
     origin: 'http://localhost:3000', 
     optionsSuccessStatus: 200, 
@@ -24,6 +24,19 @@ app.use(cookieParser());
 
 app.use(express.json());
 configViewEngine(app);
+
+app.use(
+    session({
+        store: redisStore,
+        resave: false,
+        saveUninitialized: false,
+        secret: 'keyboard cat',
+        cookie: {
+            httpOnly: true,
+            secure: false,
+        },
+    }),
+);
 
 
 
