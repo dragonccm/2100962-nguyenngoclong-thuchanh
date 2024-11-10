@@ -24,7 +24,7 @@ export const verifyToken = (token) => {
     return decode;
 };
 
-const SecurePaths = ['/checkaccount'];
+const SecurePaths = ['/','/restuser'];
 
 const extractToken = (req) => {
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -33,11 +33,9 @@ const extractToken = (req) => {
     return null;
 };
 
-export const checkUserJWT = (req, res, next) => {
-    console.log('session: ');
+export const checkUserJWT = (req, res, next) => {                                                                                                                       
     if (!SecurePaths.includes(req.path)) return next();
     let session = req.session;
-    console.log('session: ',session);
     let tokenFromHeader = extractToken(req);
     if (session && session.userId) {
         const token = session && session.userId ? session.userId : tokenFromHeader;
@@ -63,3 +61,10 @@ export const checkUserJWT = (req, res, next) => {
 };
 
 
+export const checkAuth = (req, res, next) => {
+    if (req.session && req.session.userId) {
+        next();
+    } else {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};
