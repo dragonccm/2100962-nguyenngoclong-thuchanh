@@ -9,6 +9,7 @@ import  initWebRouter from "./routes/web.js";
 import initApiRouter from "./routes/api.js";
 import { redisStore } from './redisClient.js';
 import session from 'express-session';
+import {letConnect} from "./connectDB.js";
 const corsOptions = {
     origin: 'http://localhost:3000', 
     optionsSuccessStatus: 200, 
@@ -42,6 +43,9 @@ app.use(
 
 initWebRouter(app); 
 initApiRouter(app); 
+
+
+letConnect();
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
